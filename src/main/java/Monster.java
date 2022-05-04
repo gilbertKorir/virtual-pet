@@ -45,6 +45,9 @@ public class Monster {
     public int getFoodLevel(){
         return foodLevel;
     }
+    public void play(){
+        playLevel++;
+    }
     //overiding
     public boolean equal (Object otherMonster){
         if(!(otherMonster instanceof Monster)){
