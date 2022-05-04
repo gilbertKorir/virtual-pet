@@ -139,6 +139,12 @@ class MonsterTest {
         testMonster.sleep();
         assertTrue(testMonster.getSleepLevel() > (Monster.MAX_SLEEP_LEVEL / 2));
     }
+    @Test
+    public void feed_increasesMonsterFoodLevel(){
+        Monster testMonster = new Monster("Bubbles", 1);
+        testMonster.feed();
+        assertTrue(testMonster.getFoodLevel() > (Monster.MAX_FOOD_LEVEL / 2));
+    }
 }
 
 
