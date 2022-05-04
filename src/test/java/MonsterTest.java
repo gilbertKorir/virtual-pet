@@ -126,6 +126,13 @@ class MonsterTest {
         }
         assertEquals(testMonster.isAlive(), false);
     }
+    //interacting constants
+    @Test
+    public void play_increasesMonsterPlayLevel(){
+        Monster testMonster = new Monster("Bubbles", 1);
+        testMonster.play();
+        assertTrue(testMonster.getPlayLevel() > (Monster.MAX_PLAY_LEVEL / 2));
+    }
 }
 
 
