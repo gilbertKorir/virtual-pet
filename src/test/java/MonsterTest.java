@@ -145,6 +145,15 @@ class MonsterTest {
         testMonster.feed();
         assertTrue(testMonster.getFoodLevel() > (Monster.MAX_FOOD_LEVEL / 2));
     }
+    //anticipating errors
+    @Test
+    public void monster_foodLevelCannotGoBeyondMaxValue(){
+        Monster testMonster = new Monster("Bubbles", 1);
+        for(int i = Monster.MIN_ALL_LEVELS; i <= (Monster.MAX_FOOD_LEVEL + 2); i++){
+            testMonster.feed();
+        }
+        assertTrue(testMonster.getFoodLevel() <= Monster.MAX_FOOD_LEVEL);
+    }
 }
 
 
