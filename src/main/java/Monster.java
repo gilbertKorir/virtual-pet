@@ -86,6 +86,11 @@ public class Monster {
         }
         return true;
     }
+    public void depleteLevels(){
+        playLevel--;
+        foodLevel--;
+        sleepLevel--;
+    }
 }
 
 
