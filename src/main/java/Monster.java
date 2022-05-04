@@ -51,6 +51,9 @@ public class Monster {
     public void sleep(){
         sleepLevel++;
     }
+    public void feed(){
+        foodLevel++;
+    }
     //overiding
     public boolean equal (Object otherMonster){
         if(!(otherMonster instanceof Monster)){
