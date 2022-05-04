@@ -48,6 +48,9 @@ public class Monster {
     public void play(){
         playLevel++;
     }
+    public void sleep(){
+        sleepLevel++;
+    }
     //overiding
     public boolean equal (Object otherMonster){
         if(!(otherMonster instanceof Monster)){
