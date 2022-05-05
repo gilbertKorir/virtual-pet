@@ -1,15 +1,32 @@
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.sql2o.Connection;
+import org.sql2o.Sql2o;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
-//import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MonsterTest {
-//    @Rule
-//    public DatabaseRule database = new DatabaseRule();
-
+@BeforeEach
+public void setUp(){
+    DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/virtual_pets_test", "postgres", "1234");  //Those with linux or windows use two strings for username and password
+}
+//empty persons and monsters
+    @AfterEach
+    public void afterseUp(){
+        try(Connection con = DB.sql2o.open()) {
+            String deleteMonstersQuery = "DELETE FROM monsters *;";
+            con.createQuery(deleteMonstersQuery).executeUpdate();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+//
 
     @Test
     public void monster_instantiatesCorrectly_true() {
@@ -40,6 +57,13 @@ class MonsterTest {
         testMonster.save();
         assertTrue(testMonster.equals(Monster.all().get(Monster.all().size()-1)));
     }
+
+//    @Test
+//    public void save_returnsTrueIfDescriptionsAretheSame() {
+//        Monster testMonster = new Monster("Bubbles", 1);
+//        testMonster.save();
+//        assertTrue(Monster.all().get(0).equals(testMonster));
+//    }
     //functionality of id and monster
     @Test
     public void save_assignsIdToMonster() {
@@ -150,10 +174,60 @@ class MonsterTest {
     @Test
     public void monster_foodLevelCannotGoBeyondMaxValue(){
         Monster testMonster = new Monster("Bubbles", 1);
-        for(int i = Monster.MIN_ALL_LEVELS; i <= (Monster.MAX_FOOD_LEVEL + 2); i++){
-            testMonster.feed();
+        for(int i = Monster.MIN_ALL_LEVELS; i <= (Monster.MAX_FOOD_LEVEL); i++){
+            try {
+                testMonster.feed();
+            } catch (UnsupportedOperationException exception){ }
         }
         assertTrue(testMonster.getFoodLevel() <= Monster.MAX_FOOD_LEVEL);
+    }
+    @Test
+    public void save_recordsTimeOfCreationInDatabase() {
+        Monster testMonster = new Monster("Bubbles", 1);
+        testMonster.save();
+        Timestamp savedMonsterBirthday = Monster.find(testMonster.getId()).getBirthday();
+        Timestamp rightNow = new Timestamp(new Date().getTime());
+//        assertEquals(rightNow, savedMonsterBirthday);
+        assertEquals(rightNow.getDay(), savedMonsterBirthday.getDay());
+    }
+    @Test
+    public void sleep_recordsTimeLastSleptInDatabase() {
+        Monster testMonster = new Monster("Bubbles", 1);
+        testMonster.save();
+        testMonster.sleep();
+        Timestamp savedMonsterLastSlept = Monster.find(testMonster.getId()).getLastSlept();
+        Timestamp rightNow = new Timestamp(new Date().getTime());
+        assertEquals(DateFormat.getDateTimeInstance().format(rightNow), DateFormat.getDateTimeInstance().format(savedMonsterLastSlept));
+    }
+    @Test
+    public void play_recordsTimeLastPlayedInDatabase() {
+        Monster testMonster = new Monster("Bubbles", 1);
+        testMonster.save();
+        testMonster.play();
+        Timestamp savedMonsterLastPlayed = Monster.find(testMonster.getId()).getLastPlayed();
+        Timestamp rightNow = new Timestamp(new Date().getTime());
+        assertEquals(DateFormat.getDateTimeInstance().format(rightNow), DateFormat.getDateTimeInstance().format(savedMonsterLastPlayed));
+    }
+    @Test
+    public void timer_executesDepleteLevelsMethod() {
+        Monster testMonster = new Monster("Bubbles", 1);
+        int firstPlayLevel = testMonster.getPlayLevel();
+        testMonster.startTimer();
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException exception){}
+        int secondPlayLevel = testMonster.getPlayLevel();
+        assertTrue(firstPlayLevel > secondPlayLevel);
+    }
+    @Test
+    public void timer_haltsAfterMonsterDies() {
+        Monster testMonster = new Monster("Bubbles", 1);
+        testMonster.startTimer();
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException exception){}
+        assertFalse(testMonster.isAlive());
+        assertTrue(testMonster.getFoodLevel() >= 0);
     }
 }
 

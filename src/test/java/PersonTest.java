@@ -12,17 +12,12 @@ class PersonTest {
     public void setUp(){
         DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/virtual_pets_test", "postgres", "1234");  //Those with linux or windows use two strings for username and password
     }
-    //    protected void before() {
-//        DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/virtual_pets_test", "postgres", "1234");  //Those with linux or windows use two strings for username and password
-//    }
 //empty persons and monsters
     @AfterEach
     public void afterseUp(){
         try(Connection con = DB.sql2o.open()) {
             String deletePersonsQuery = "DELETE FROM persons *;";
-            String deleteMonstersQuery = "DELETE FROM monsters *;";
             con.createQuery(deletePersonsQuery).executeUpdate();
-            con.createQuery(deleteMonstersQuery).executeUpdate();
         }catch (Exception e){
             System.out.println(e);
         }
@@ -64,8 +59,11 @@ class PersonTest {
         firstPerson.save();
         Person secondPerson = new Person("Harriet", "harriet@harriet.com");
         secondPerson.save();
+        Person thirdPerson = new Person("Jared", "har@harriet.com");
+        thirdPerson.save();
         assertEquals(true, Person.all().get(0).equals(firstPerson));
         assertEquals(true, Person.all().get(1).equals(secondPerson));
+        assertEquals(true, Person.all().get(2).equals(thirdPerson));
     }
     @Test
     public void find_returnsPersonWithSameId_secondPerson() {
