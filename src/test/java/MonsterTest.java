@@ -1,14 +1,15 @@
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertTrue;
+//import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MonsterTest {
-    @Rule
-    public DatabaseRule database = new DatabaseRule();
+//    @Rule
+//    public DatabaseRule database = new DatabaseRule();
+
 
     @Test
     public void monster_instantiatesCorrectly_true() {
@@ -37,7 +38,7 @@ class MonsterTest {
     public void save_returnsTrueIfDescriptionsAretheSame() {
         Monster testMonster = new Monster("Bubbles", 1);
         testMonster.save();
-        assertTrue(Monster.all().get(0).equals(testMonster));
+        assertTrue(testMonster.equals(Monster.all().get(Monster.all().size()-1)));
     }
     //functionality of id and monster
     @Test

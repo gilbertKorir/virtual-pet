@@ -1,15 +1,38 @@
-import org.junit.Rule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.sql2o.Connection;
+import org.sql2o.Sql2o;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-public class PersonTest {
-    @Rule
-    public DatabaseRule database = new DatabaseRule();
+
+class PersonTest {
+    @BeforeEach
+    public void setUp(){
+        DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/virtual_pets_test", "postgres", "1234");  //Those with linux or windows use two strings for username and password
+    }
+    //    protected void before() {
+//        DB.sql2o = new Sql2o("jdbc:postgresql://localhost:5432/virtual_pets_test", "postgres", "1234");  //Those with linux or windows use two strings for username and password
+//    }
+//empty persons and monsters
+    @AfterEach
+    public void afterseUp(){
+        try(Connection con = DB.sql2o.open()) {
+            String deletePersonsQuery = "DELETE FROM persons *;";
+            String deleteMonstersQuery = "DELETE FROM monsters *;";
+            con.createQuery(deletePersonsQuery).executeUpdate();
+            con.createQuery(deleteMonstersQuery).executeUpdate();
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+//
     @Test
-    public void person_instantiatesCorrectly_true(){
+    public void person_instantiatesCorrectly_true() {
         Person testPerson = new Person("Henry", "[email protected]");
         assertEquals(true, testPerson instanceof Person);
+
     }
     @Test
     public void getName_personIn_Henry(){
@@ -21,12 +44,7 @@ public class PersonTest {
         Person testPerson = new Person("Henry", "[email protected]");
         assertEquals("[email protected]", testPerson.getEmail());
     }
-    @Test
-    public void equals_returnsTrueIfNameAndEmailAreSame_true() {
-        Person firstPerson = new Person("Henry", "[email protected]");
-        Person anotherPerson = new Person("Henry", "[email protected]");
-        assertTrue(firstPerson.equals(anotherPerson));
-    }
+
     @Test
     public void save_insertsObjectIntoDatabase_Person() {
         Person testPerson = new Person("Henry", "[email protected] (Links to an external site.)");
@@ -58,18 +76,3 @@ public class PersonTest {
         assertEquals(Person.find(secondPerson.getId()), secondPerson);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

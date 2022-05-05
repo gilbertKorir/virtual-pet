@@ -1,0 +1,13 @@
+ id |  name   | personid 
+----+---------+----------
+  1 | Bubbles |        1
+  2 | Bubbles |        1
+  3 | Bubbles |        1
+  4 | Spud    |        1
+  5 | Bubbles |        1
+  6 | Bubbles |        2
+  7 | Spud    |        2
+  8 | Bubbles |        1
+  9 | Spud    |        3
+(9 rows)
+

@@ -10,15 +10,6 @@ public class Person {
         this.name = name;
         this.email = email;
     }
-    public String getName() {
-        return name;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public int getId() {
-        return id;
-    }
 
     @Override
     public boolean equals(Object otherPerson){
@@ -63,6 +54,15 @@ public class Person {
                     .addParameter("id", this.id)
                     .executeAndFetch(Monster.class);
         }
+    }
+    public String getName() {
+        return name;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public int getId() {
+        return id;
     }
 
 }
